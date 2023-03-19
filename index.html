@@ -14,7 +14,7 @@
     </div>
     <div class="grid-container">
         <div class="sidebar">
-            <form action="" class="sidebar-form">
+            <form action="" class="sidebar-form" id="gameForm">
                 <div class="form-content">
                     <label class="form-label" for="title">Gametitle:</label>
                     <input class="form-input" type="text" id="title" placeholder="Title">
@@ -24,14 +24,24 @@
                     <input class="form-input" type="text" id="platform" placeholder="Platform">
                 </div>
                 <div class="form-checkbox">
-                    <label class="form-label" for="checkbox">Played it?</label>
-                    <input  type="checkbox" id="checkbox" value="Played it?">
+                    <label class="checkbox-label"  for="checkbox">Played it?</label>
+                    <input class="checkbox-input" type="checkbox" id="checkbox" value="Played it?">
                 </div>
-                <div></div>
-                <button type="submit">Add</button>
+                <button class="form-btn" type="button" id="addBtn">Add</button>
             </form>
         </div>
-        <div class="table"></div>
+        <div id="container" class="game-container">
+            <div class="game-card">
+                <div class="card-title">Title</div>
+                <div class="card-platform">Platform</div>
+                <div class="card-played">Played?</div>
+            </div>
+            <div class="game-card-add">
+                <div class="card-title-add">Title</div>
+                <div class="card-platform-add">Platform</div>
+                <div class="card-played-add">Played?</div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
