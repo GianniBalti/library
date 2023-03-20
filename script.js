@@ -1,81 +1,110 @@
 
 let addBtn = document.getElementById("addBtn");
 let Games = [];
+let gameCounter = 0;
 
-function Game(title, platform, played) {
+function Game(title, platform, played,id) {
+    this.id = id;
     this.title = title;
     this.platform = platform;
     this.played = played;
 }
 
-addBtn.addEventListener("click", addGameToLibrary);
+addBtn.addEventListener("click", submitForm);
 
-function addGameToLibrary() {
-    const container = document.getElementById("container");
-        container.innerHTML = "";
-        //console.log(container);
-        let title = document.getElementById("title").value;
-        let platform = document.getElementById("platform").value;
-        let played = document.getElementById("checkbox").checked;
-        const game = new Game(title, platform, played);
-        Games.push(game);
-        displayGames();  
+function submitForm() {
+    if (Games.length === 0) {
+        gameCounter = 1;
     }
+    let form = document.getElementById("gameForm");
+    let title = document.getElementById("title").value;
+    let platform = document.getElementById("platform").value;
+    let played = document.getElementById("checkbox").checked;
+    let id = gameCounter;
+    const game = new Game(title, platform, played, id);
+    //console.log(game);
 
-function displayGames() {
-    Games.forEach(function(game, i) {
-        // Games.shift();
-        let card = document.createElement("div");
-        card.id = "card-"+i;
-        card.setAttribute("data-id",i);
-        card.className = "game-card-add";
-        let cardTitle = document.createElement("div");
-        cardTitle.className = "card-title-add";
-        let cardPlatform = document.createElement("div");
-        cardPlatform.className = "card-platform-add";
-        let cardStatus = document.createElement("button");
-        let cardDelete = document.createElement("button");
-        cardStatus.id = "status-"+i;
-        cardTitle.innerText = game.title;
-        cardPlatform.innerText = game.platform;
-        cardDelete.innerText = "Delete";
-        cardDelete.id = "delete-btn"+i;
-        cardDelete.setAttribute("data-id", i);
-        card.append(cardTitle, cardPlatform, cardStatus, cardDelete)
-        cardDelete.addEventListener("click", () => {
-             let currentCard = document.getElementById('card-'+i);
-             console.log(currentCard);
-             currentCard.remove();
-             delete Games[i];
-         });
-        if (game.played == true) {
-            cardStatus.innerText = "Played";
+    addGameToLibrary(game);
+    gameCounter++;
+    form.reset();
+    
+}
+
+function addGameToLibrary(g) {
+    const container = document.getElementById("container");
+    container.innerHTML = "";
+    Games.push(g);
+    // console.log(Games);
+    // console.log(Games.length);
+    // console.log(gameCounter);
+    //create div elements for each game
+    Games.forEach(g => {
+        let gameCard = document.createElement("div");
+        let gameId = document.createElement("div");
+        let gameTitle = document.createElement("div");
+        let gamePlatform = document.createElement("div");
+        let gamePlayed = document.createElement("button");
+        let gameDelete = document.createElement("button");
+        //add classes to elements;
+        gameCard.className = "game-card-add";
+        gameCard.dataset.key = g.id;
+        console.log(gameCard);
+        gameId.className = "card-id-add";
+        gameTitle.className = "card-title-add";
+        gamePlatform.className = "card-platform-add";
+        //adds values to the elements
+        gameId.innerText = g.id;
+        gameTitle.innerText = g.title;
+        gamePlatform.innerText = g.platform;
+        if (g.played == true) {
+            gamePlayed.innerText = "Played";
+            gamePlayed.className = "played-btn";
         } else {
-            cardStatus.innerText = "Not played";
+            gamePlayed.innerText = "Not played";
+            gamePlayed.className = "not-played";
+
         }
-        cardStatus.addEventListener("click", () => {
-            let currentStatus = document.getElementById("status-"+i);
-            let currentObject = Games[i];
-            if (currentStatus.innerText === "Played" && currentObject.played === true) {
-                currentObject.played = false;
-                console.log(currentObject.played);
-                console.log(Games);
-                currentStatus.innerText = "Not played";
-            } else {
-                currentObject.played = true;
-                currentStatus.innerText = "Played";
-                console.log(Games);
+        gamePlayed.dataset.id = g.id;
+        gameDelete.innerText = "Remove";
+        gameDelete.dataset.id = g.id;
+        gameDelete.className = "delete-btn";
+        //delete's game from dom and from array
+        gameDelete.addEventListener("click", () => {
+            for (let i = 0; i < Games.length; i++) {
+                if (Games[i].id.toString() === gameDelete.dataset.id) {
+                    let toDelete = document.querySelector(`[data-key='${gameDelete.dataset.id}']`);
+                    toDelete.remove();
+                    Games.splice(i,1);
+                }               
             }
         })
-        container.appendChild(card);
-            
-                 
-    })  
-    }
-
+        gamePlayed.addEventListener("click", () => {
+            let currentStatus = gamePlayed;
+            for (let i = 0; i < Games.length; i++) {
+                if (Games[i].id.toString() === currentStatus.dataset.id) {
+                    let currentObject = Games[i];
+                    if (currentObject.played === false && currentStatus.innerText === "Not played") {
+                        currentObject.played = true;
+                        currentStatus.innerText = "Played";
+                        currentStatus.className = "played-btn";
+                    } else {
+                        currentObject.played = false;
+                        currentStatus.innerText = "Not played";
+                        currentStatus.className = "not-played";
+                    }
+                    console.log(currentObject);
+                    console.log(currentStatus);
+                    console.log(currentStatus.innerText);
+                }
+            }; 
+        })
+        gameCard.append(gameId,gameTitle,gamePlatform,gamePlayed,gameDelete);
+        container.appendChild(gameCard);
+    })
     
+}
 
-  
+
 
 
 
